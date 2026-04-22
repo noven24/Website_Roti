@@ -41,10 +41,10 @@ const SocialPage = () => {
               <div className="w-16 h-16 bg-[#F35520] rounded-xl flex items-center justify-center mb-4 shadow-sm hover:scale-105 transition-transform cursor-pointer">
                 <FacebookIcon size={36} color="white" fill="white" strokeWidth={1} />
               </div>
-              <p className="text-[14px] font-bold text-brand-dark mb-2">Facebook HOLLAND BAKERY INDONESIA(OFFICIAL)</p>
+              <p className="text-[14px] font-bold text-brand-dark mb-2">Facebook D'BAKERY PURWOKERTO(OFFICIAL)</p>
               <p className="text-[13px] text-gray-500 mb-1">Join our Facebook Page :</p>
               <a href="https://www.facebook.com/hollandbakery/" target="_blank" rel="noopener noreferrer" className="text-[13px] text-brand-primary hover:underline">
-                https://www.facebook.com/hollandbakery/
+                https://www.facebook.com/d'bakery_pwt/
               </a>
             </div>
 
@@ -53,10 +53,10 @@ const SocialPage = () => {
               <div className="w-16 h-16 bg-[#F35520] rounded-xl flex items-center justify-center mb-4 shadow-sm hover:scale-105 transition-transform cursor-pointer">
                 <InstagramIcon size={36} color="white" strokeWidth={2} />
               </div>
-              <p className="text-[14px] font-bold text-brand-dark mb-2">Instagram @hollandbakeryindonesia</p>
+              <p className="text-[14px] font-bold text-brand-dark mb-2">Instagram @d'bakery_pwt</p>
               <p className="text-[13px] text-gray-500 mb-1">Follow us on Instagram:</p>
               <a href="https://instagram.com/hollandbakeryindonesia/" target="_blank" rel="noopener noreferrer" className="text-[13px] text-brand-primary hover:underline">
-                https://instagram.com/hollandbakeryindonesia/
+                https://instagram.com/d'bakery_pwt/
               </a>
             </div>
           </div>
@@ -78,9 +78,9 @@ const SocialPage = () => {
                  <InstagramIcon size={24} color="white" strokeWidth={2} />
               </div>
               <p className="text-[15px] font-bold text-brand-dark leading-tight">Our Instagram</p>
-              <p className="text-[14px] font-bold text-brand-dark mb-3">@hollandbakeryindonesia</p>
+              <p className="text-[14px] font-bold text-brand-dark mb-3">@d'bakery_pwt</p>
               <p className="text-[11px] text-gray-800 leading-relaxed font-medium">
-                One of the first pioneer in modern bakery business in Indonesia. Established in 1978 with more than 470 outlets & 25 branches.
+                One of the first pioneer in homemade bakery business in Indonesia. Established in 2018 with more than 2 outlets & 7 branches.
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@ const SocialPage = () => {
               </div>
               <p className="text-white font-bold text-[14px] mb-2 drop-shadow-md">@heriandre1212__inst</p>
               <p className="text-white text-[12px] leading-relaxed drop-shadow-md font-medium">
-                Moment Keseruan HUT @hollandbakeryindonesia ... terima kasih semua... ten.nama HB Indonesia & HB bali... sukses & jaya selalu... Tim luar kota... #hbmoment #hb40th #huthollandbakeryke40 #hollandbakeryindonesia #hollandbakery #teratasbaronakualitas #hbmoment
+                Moment Keseruan HUT @d'bakery_pwt ... terima kasih semua... ten.nama HB Indonesia & HB bali... sukses & jaya selalu... Tim luar kota... #hbmoment #hb40th #d'bakerypwt #teratasbaronakualitas #hbmoment
               </p>
             </div>
           </div>
@@ -157,7 +157,7 @@ const SocialPage = () => {
               </div>
               <p className="text-white font-bold text-[14px] mb-2 drop-shadow-md">@mylla.asmara</p>
               <p className="text-white text-[12px] leading-relaxed drop-shadow-md font-medium">
-                Ulang Tahun Kayla di rumah mbah uti di Kendal - Jawa Tengah. Tetep yah cari kue ulang tahunnya di @hollandbakeryindonesia. #HBnostalgia #HBMoment #HollandBakeryIndonesia #hbmoment
+                Ulang Tahun Kayla di rumah mbah uti di Kendal - Jawa Tengah. Tetep yah cari kue ulang tahunnya di @d'bakery_pwt. #HBnostalgia #HBMoment #D'BakeryPurwokerto #hbmoment
               </p>
             </div>
           </div>
