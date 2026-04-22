@@ -1,0 +1,5 @@
+- [x] Create `CartPage.jsx` component mapping to screenshot design.
+- [x] Update `cartSlice.js` with `clearCart` action.
+- [x] Add `/cart` route in `App.jsx`.
+- [x] Update `Header.jsx` to link Purchase Now button to `/cart`.
+- [x] Update `walkthrough.md`.
