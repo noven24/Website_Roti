@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { cartActions } from '../redux/cartSlice';
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
     if (product.isPreOrder) {
       dispatch(cartActions.addToCart(product));
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
     }
   };
 
@@ -24,8 +27,18 @@ const ProductCard = ({ product }) => {
   }).format(product.oldPrice).replace(/\s/g, '') : null;
 
   return (
-    <div className="bg-white border border-gray-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div className="bg-white border border-gray-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
       
+      {/* Toast Notification Top */}
+      <div className={`absolute top-2 left-0 right-0 flex justify-center z-10 transition-all duration-300 ${added ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+        <div className="bg-green-600 text-white text-[11px] font-medium px-3 py-1.5 rounded-full shadow-md flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+          Berhasil ditambahkan
+        </div>
+      </div>
+
       {/* Fixed-height image area */}
       <div className="w-full h-[200px] overflow-hidden bg-gray-50 flex-shrink-0">
         <img 
@@ -70,9 +83,9 @@ const ProductCard = ({ product }) => {
       {product.isPreOrder ? (
         <button 
           onClick={handleAddToCart}
-          className="w-full py-[11px] mt-auto bg-brand-primary text-white font-medium text-[12px] uppercase tracking-wider hover:bg-brand-dark transition-colors duration-300 focus:outline-none"
+          className={`w-full py-[11px] mt-auto font-medium text-[12px] uppercase tracking-wider transition-colors duration-300 focus:outline-none ${added ? 'bg-green-600 text-white' : 'bg-brand-primary text-white hover:bg-brand-dark'}`}
         >
-          {product.buttonText || 'Pre Order'}
+          {added ? '✓ Ditambahkan' : (product.buttonText || 'Pre Order')}
         </button>
       ) : (
         <div className="w-full py-[11px] mt-auto bg-brand-light/30 border-t border-gray-100 flex items-center justify-center">
