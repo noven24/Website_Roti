@@ -48,7 +48,7 @@ const MenuPage = () => {
     // Filter
     let result = products;
     if (selectedCategory !== 'all_product') {
-      result = result.filter(p => p.category === selectedCategory);
+      result = result.filter(p => p.category && p.category.split(',').includes(selectedCategory));
     }
     
     // Sort

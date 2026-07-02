@@ -29,7 +29,7 @@ const Categories = () => {
            // Use the last product's image to ensure it's different from the first/best seller
            image = products[products.length - 1]?.image || cat.image;
         } else {
-           const product = products.find(p => p.category === cat.value);
+           const product = products.find(p => p.category && p.category.split(',').includes(cat.value));
            if (product) {
              image = product.image;
            }

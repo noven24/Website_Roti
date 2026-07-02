@@ -10,7 +10,7 @@ const CATEGORIES = [
   { label: 'Roti Box', value: 'roti_box' },
 ];
 
-const EMPTY_FORM = { name: '', price: '', old_price: '', image: '', category: 'roti_manis' };
+const EMPTY_FORM = { name: '', price: '', old_price: '', image: '', category: '' };
 const EMPTY_PROMO_FORM = { title: '', type: 'news', image: '' };
 
 // ─── Format Rupiah ────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ const LoginScreen = ({ onLogin }) => {
 const ProductModal = ({ token, product, onClose, onSaved }) => {
   const isEdit = !!product;
   const [form, setForm] = useState(isEdit
-    ? { name: product.name, price: product.price, old_price: product.old_price || '', image: product.image, category: product.category }
+    ? { name: product.name, price: product.price, old_price: product.old_price || '', image: product.image, category: product.category || '' }
     : EMPTY_FORM
   );
   const [file, setFile] = useState(null);
@@ -172,12 +172,32 @@ const ProductModal = ({ token, product, onClose, onSaved }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
-            <select name="category" value={form.category} onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white"
-              required>
-              {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-            </select>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Kategori *</label>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.filter(c => c.value !== 'all_product').map(c => (
+                <label key={c.value} className="flex items-center gap-2 cursor-pointer text-sm">
+                  <input 
+                    type="checkbox" 
+                    name="category"
+                    value={c.value}
+                    checked={(form.category || '').split(',').includes(c.value)}
+                    onChange={(e) => {
+                      const currentCats = form.category ? form.category.split(',').filter(Boolean) : [];
+                      if (e.target.checked) {
+                        setForm(prev => ({ ...prev, category: [...currentCats, c.value].join(',') }));
+                      } else {
+                        setForm(prev => ({ ...prev, category: currentCats.filter(v => v !== c.value).join(',') }));
+                      }
+                    }}
+                    className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
+                  />
+                  {c.label}
+                </label>
+              ))}
+            </div>
+            {(!form.category) && (
+               <p className="text-red-500 text-xs mt-1">Pilih minimal 1 kategori.</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -664,9 +684,13 @@ const AdminPage = () => {
                               </div>
                             </td>
                             <td className="px-4 py-4">
-                              <span className="bg-brand-light text-brand-primary text-xs font-semibold px-2.5 py-1 rounded-full capitalize">
-                                {product.category}
-                              </span>
+                              <div className="flex flex-wrap gap-1">
+                                {(product.category || '').split(',').filter(Boolean).map(cat => (
+                                  <span key={cat} className="bg-brand-light text-brand-primary text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize">
+                                    {cat.replace('_', ' ')}
+                                  </span>
+                                ))}
+                              </div>
                             </td>
                             <td className="px-4 py-4 font-semibold text-brand-primary">{formatRp(product.price)}</td>
                             <td className="px-4 py-4 text-gray-400 line-through text-xs">{formatRp(product.old_price)}</td>
