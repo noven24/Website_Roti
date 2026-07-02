@@ -403,7 +403,7 @@ const PromoModal = ({ token, promo, onClose, onSaved }) => {
 // ─── Main Admin Page ──────────────────────────────────────────────────────────
 const AdminPage = () => {
   const [token, setToken] = useState(() => sessionStorage.getItem('admin_token') || '');
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'promos'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'products' | 'promos'
   const [products, setProducts] = useState([]);
   const [promos, setPromos] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -502,6 +502,34 @@ const AdminPage = () => {
     loadData();
   };
 
+  const downloadCSV = () => {
+    if (!orders || orders.length === 0) {
+      showToast('⚠️ Tidak ada data pesanan untuk di-download.');
+      return;
+    }
+    
+    const headers = ['ID Pesanan', 'Tanggal', 'Detail Pesanan', 'Total (Rp)', 'Status'];
+    const rows = orders.map(order => [
+      order.id,
+      new Date(order.created_at).toLocaleString('id-ID'),
+      `"${order.order_details.replace(/"/g, '""')}"`,
+      order.total_amount,
+      order.status
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Laporan_Penjualan_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('⬇️ Laporan berhasil diunduh.');
+  };
+
   const filteredHistory = (historyLogs || []).filter(h =>
     h.details?.toLowerCase().includes(search.toLowerCase()) ||
     h.action_type?.toLowerCase().includes(search.toLowerCase()) ||
@@ -542,7 +570,13 @@ const AdminPage = () => {
       <div className="max-w-6xl mx-auto px-4 py-8">
         
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-gray-200">
+        <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-200">
+          <button 
+            onClick={() => setActiveTab('dashboard')}
+            className={`px-6 py-3 font-semibold text-sm border-b-2 transition-colors ${activeTab === 'dashboard' ? 'border-brand-primary text-brand-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+          >
+            Dashboard
+          </button>
           <button 
             onClick={() => setActiveTab('products')}
             className={`px-6 py-3 font-semibold text-sm border-b-2 transition-colors ${activeTab === 'products' ? 'border-brand-primary text-brand-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
@@ -570,27 +604,58 @@ const AdminPage = () => {
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <input
-            type="text"
-            placeholder={activeTab === 'products' ? "🔍 Cari produk atau kategori..." : activeTab === 'promos' ? "🔍 Cari judul atau tipe promo..." : activeTab === 'orders' ? "🔍 Cari pesanan..." : "🔍 Cari histori aktivitas..."}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white shadow-sm"
-          />
-          {activeTab !== 'orders' && activeTab !== 'history' && (
-            <button
-              onClick={() => setModal({ type: activeTab === 'products' ? 'product' : 'promo', mode: 'add' })}
-              className="bg-brand-primary hover:bg-brand-dark text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2 whitespace-nowrap shadow-sm"
-            >
-              <span className="text-lg leading-none">+</span> 
-              Tambah {activeTab === 'products' ? 'Produk' : 'News/Promo'}
-            </button>
-          )}
-        </div>
+        {activeTab !== 'dashboard' && (
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <input
+              type="text"
+              placeholder={activeTab === 'products' ? "🔍 Cari produk atau kategori..." : activeTab === 'promos' ? "🔍 Cari judul atau tipe promo..." : activeTab === 'orders' ? "🔍 Cari pesanan..." : "🔍 Cari histori aktivitas..."}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white shadow-sm"
+            />
+            {activeTab !== 'orders' && activeTab !== 'history' && (
+              <button
+                onClick={() => setModal({ type: activeTab === 'products' ? 'product' : 'promo', mode: 'add' })}
+                className="bg-brand-primary hover:bg-brand-dark text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2 whitespace-nowrap shadow-sm"
+              >
+                <span className="text-lg leading-none">+</span> 
+                Tambah {activeTab === 'products' ? 'Produk' : 'News/Promo'}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Stats */}
-        {activeTab === 'products' ? (
+        {activeTab === 'dashboard' ? (
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Ringkasan Penjualan</h2>
+              <button 
+                onClick={downloadCSV}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2 shadow-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download Laporan (.CSV)
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                { label: 'Total Pendapatan (Lunas)', value: formatRp((orders || []).filter(o => o.status === 'lunas').reduce((sum, o) => sum + Number(o.total_amount), 0)), color: 'text-green-600', bg: 'bg-green-50' },
+                { label: 'Pesanan Selesai (Lunas)', value: (orders || []).filter(o => o.status === 'lunas').length, color: 'text-brand-primary', bg: 'bg-brand-light' },
+                { label: 'Pesanan Menunggu (Pending)', value: (orders || []).filter(o => o.status === 'pending').length, color: 'text-orange-600', bg: 'bg-orange-50' },
+              ].map(stat => (
+                <div key={stat.label} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col items-center justify-center text-center">
+                  <div className={`${stat.bg} p-3 rounded-full mb-3`}>
+                    <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : activeTab === 'products' ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[
               { label: 'Total Produk', value: products.length, color: 'text-brand-primary' },
